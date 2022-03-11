@@ -24,7 +24,7 @@
     <script src="json2.js"></script>
   </head> 
   <body bgcolor="black" height="100%" width="100%">
-    <button onclick = "fetch('/clear', {method:'GET'}).then(response=>clearFrame())">Clear Canvas</button>
+    <button onclick="sendJSONXMLHTTPRequest('POST', '/clear', {}, (response) => {clearFrame();});">Clear Canvas</button>
     <canvas id="c" width="100%" height="100%" style="-webkit-tap-highlight-color: transparent;"></canvas> 
     <script>
 var canvas = document.getElementById('c');
@@ -147,13 +147,8 @@ function getPosition(e) {
 function addEntity(entity, data) {
     world[entity] = data;
     //XXX: Send a XHTML Request that updates the entity you just  modified! - DONE
-    // sendJSONXMLHTTPRequest() seemed too slow, opted for fetch() instead
-    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    fetch(`/entity/${entity}`, {
-        method: 'POST',
-        headers: {"Content-Type": "application/json", "Accept": "application/json"},
-        body: JSON.stringify(data)
-        }).then(response => drawNextFrame());
+    drawNextFrame();
+    sendJSONXMLHTTPRequest('POST', `/entity/${entity}`, data, (response) => {});
 }
 
 var counter = 0;
